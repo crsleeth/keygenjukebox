@@ -116,7 +116,23 @@
 
 	function resume() {
 		startAudioGraph();
-		audio.play().catch(() => {});
+		audio.play().catch((err) => {
+			// Browsers refuse to start sound on their own until the visitor has
+			// interacted with the page; start on their first click or key press.
+			if (err.name === 'NotAllowedError') waitForGesture();
+		});
+	}
+
+	function onGesture() {
+		document.removeEventListener('click', onGesture);
+		document.removeEventListener('keydown', onGesture);
+		if (audio.paused) resume();
+		else startAudioGraph();
+	}
+
+	function waitForGesture() {
+		document.addEventListener('click', onGesture);
+		document.addEventListener('keydown', onGesture);
 	}
 
 	function toggle() {
@@ -351,6 +367,10 @@
 		(names) => {
 			tracks = names;
 			renderTracks();
+			next(); // autoplay
+			// If sound started but the visualizer's audio context was held back,
+			// the first interaction releases it.
+			waitForGesture();
 		},
 		() => {
 			list.firstElementChild.textContent = 'Could not load the track list.';

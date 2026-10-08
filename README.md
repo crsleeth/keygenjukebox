@@ -1,6 +1,6 @@
 # keygenjukebox.net
 
-Status: Rebuilt as plain HTML/CSS/JS behind Caddy; verified in a local preview, the Docker stack itself has not been run yet | Next: Deploy the stack in Dockge and confirm it serves the music
+Status: Rebuilt as plain HTML/CSS/JS behind Caddy, autoplays on load; verified in a local preview, the Docker stack itself has not been run yet | Next: Deploy the stack in Dockge and confirm it serves the music
 
 A jukebox for keygen music: a visualizer, a few controls, and a long scrollable list of tracks. No build step, no framework, no database.
 
