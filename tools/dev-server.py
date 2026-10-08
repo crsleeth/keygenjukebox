@@ -94,5 +94,16 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print(f"http://localhost:{PORT}  (music: {MUSIC})")
-    ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    except OSError:
+        sys.exit(
+            f"Port {PORT} is already in use. If the preview is already running, "
+            f"just open http://localhost:{PORT}\n"
+            f"Otherwise pick another port: python3 tools/dev-server.py {PORT + 1}"
+        )
+    print(f"http://localhost:{PORT}  (music: {MUSIC})  Ctrl+C to stop", flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print()
