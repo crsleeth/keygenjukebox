@@ -1,0 +1,26 @@
+# SITE_ADDRESS comes from .env (see .env.example). The default, ":80", serves
+# plain HTTP for use behind Cloudflare or another proxy. Set it to a domain
+# name and Caddy will fetch and renew an HTTPS certificate for it by itself.
+{$SITE_ADDRESS::80} {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	# The music folder. `browse` is what gives the page its track list: the
+	# player requests /music/ as JSON, so new files show up without a rebuild.
+	handle_path /music/* {
+		root * /music
+		@audio path *.mp3 *.ogg *.opus *.m4a *.flac *.wav
+		header @audio Cache-Control "public, max-age=2592000"
+		file_server browse
+	}
+
+	handle {
+		root * /srv
+		file_server
+	}
+}

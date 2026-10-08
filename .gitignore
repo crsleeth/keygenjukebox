@@ -1,0 +1,8 @@
+# The music archive is ~3 GB and lives outside git
+mp3s/
+
+.env
+.claude/
+.DS_Store
+__pycache__/
+Screenshot*.png
