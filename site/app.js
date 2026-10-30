@@ -262,25 +262,10 @@
 			const barHeight = Math.round((bins[i] / 255) * 0.85 * height);
 			ctx2d.fillRect(x, height - barHeight, barWidth, barHeight);
 		}
-		bounceMascot(live);
 		// Keep animating after a pause until the bars have fallen back to zero.
 		if (!audio.paused || live) startDrawing();
 	}
 
-	// The mascot hops when the bass jumps above its recent average, i.e. on the beat.
-	const mascot = document.querySelector('.mascot');
-	let bassAverage = 0;
-	let hop = 0;
-
-	function bounceMascot(live) {
-		let bass = 0;
-		for (let i = 0; i < 8; i++) bass += bins[i];
-		bass /= 8 * 255;
-		bassAverage += (bass - bassAverage) * 0.05;
-		const kick = Math.min(1, Math.max(0, bass - bassAverage) * 8);
-		hop = live ? Math.max(kick, hop * 0.85) : 0;
-		mascot.style.transform = `translateY(${-Math.round(hop * 8)}px)`;
-	}
 
 	function startDrawing() {
 		if (!frame) frame = requestAnimationFrame(draw);
