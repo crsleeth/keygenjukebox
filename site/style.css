@@ -133,7 +133,10 @@ button { font: inherit; color: inherit; }
 
 .time { margin-left: auto; padding-left: 8px; white-space: nowrap; }
 
-.now { display: flex; gap: 1ch; margin: 14px 0 0; }
+.now { display: flex; gap: 1ch; margin: 14px 0 0; padding: 10px 5px; }
+
+/* Same highlight as the playing row in the list, once a track is loaded */
+.now:has(button:enabled) { background: var(--accent); color: var(--on-accent); }
 .now span { flex: none; }
 
 .now button {

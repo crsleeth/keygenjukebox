@@ -56,7 +56,15 @@
 		return entries
 			.filter((e) => !e.is_dir && AUDIO_FILE.test(e.name))
 			.map((e) => e.name)
-			.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+			.sort(byName);
+	}
+
+	// AaBbCc order: ignore case first, then put uppercase before lowercase.
+	function byName(a, b) {
+		const x = a.toLowerCase();
+		const y = b.toLowerCase();
+		if (x !== y) return x < y ? -1 : 1;
+		return a < b ? -1 : a > b ? 1 : 0;
 	}
 
 	function renderTracks() {
