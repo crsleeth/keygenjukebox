@@ -357,10 +357,36 @@
 		navigator.mediaSession.setActionHandler('nexttrack', next);
 	}
 
-	matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+	// ---- Light/dark toggle ----
+
+	const themeBtn = $('theme');
+	const prefersDark = matchMedia('(prefers-color-scheme: dark)');
+	const isDark = () => (document.documentElement.dataset.theme || (prefersDark.matches ? 'dark' : 'light')) === 'dark';
+
+	function syncTheme() {
+		const dark = isDark();
+		themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+		for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+			meta.content = dark ? '#121212' : '#ffffff';
+		}
 		readTheme();
 		startDrawing();
+	}
+
+	themeBtn.addEventListener('click', () => {
+		const theme = isDark() ? 'light' : 'dark';
+		// Picking the browser's own theme goes back to following the browser.
+		if (theme === (prefersDark.matches ? 'dark' : 'light')) {
+			delete document.documentElement.dataset.theme;
+			try { localStorage.removeItem('kgj.theme'); } catch {}
+		} else {
+			document.documentElement.dataset.theme = theme;
+			try { localStorage.setItem('kgj.theme', theme); } catch {}
+		}
+		syncTheme();
 	});
+
+	prefersDark.addEventListener('change', syncTheme);
 	new ResizeObserver(() => {
 		fitCanvas();
 		startDrawing();
@@ -369,7 +395,7 @@
 	shuffleBtn.setAttribute('aria-pressed', shuffle);
 	volumeInput.value = volume;
 	applyVolume();
-	readTheme();
+	syncTheme();
 	fitCanvas();
 
 	loadTracks().then(

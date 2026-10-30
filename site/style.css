@@ -10,8 +10,9 @@
 	--link: #00f;
 }
 
+/* Dark follows the browser unless the visitor picked a theme with the toggle */
 @media (prefers-color-scheme: dark) {
-	:root {
+	:root:not([data-theme="light"]) {
 		--bg: #121212;
 		--fg: #e4e4e4;
 		--line: rgba(255, 255, 255, 0.12);
@@ -20,6 +21,18 @@
 		--link: #6cb6ff;
 	}
 }
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+	--bg: #121212;
+	--fg: #e4e4e4;
+	--line: rgba(255, 255, 255, 0.12);
+	--hover: #1c1c1c;
+	--rail: #2a2a2a;
+	--link: #6cb6ff;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
 
 html, body { height: 100%; }
 
@@ -220,6 +233,20 @@ button { font: inherit; color: inherit; }
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+/* Theme toggle */
+
+.theme-toggle { position: fixed; top: 10px; right: 10px; }
+.theme-toggle .stroke { stroke-width: 1.6; }
+.icon-sun { display: none; }
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .icon-sun { display: inline; }
+	:root:not([data-theme="light"]) .icon-moon { display: none; }
+}
+
+:root[data-theme="dark"] .icon-sun { display: inline; }
+:root[data-theme="dark"] .icon-moon { display: none; }
 
 /* Not enough side margin for the corner notice: show it as a card instead */
 @media (max-width: 960px) {
