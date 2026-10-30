@@ -12,6 +12,8 @@ Put the music in `mp3s/`, then:
 docker compose up -d
 ```
 
+With Podman, use `podman compose up -d`. Podman has no always-running daemon, so to bring the container back after a reboot also run `systemctl enable --now podman-restart` (add `--user` for rootless). Rootless Podman can't use ports below 1024 by default; set `HTTP_PORT`/`HTTPS_PORT` to e.g. `8080`/`8443`.
+
 The track list is read from the music folder on each page load, so adding or removing files needs no restart.
 
 ## Settings
