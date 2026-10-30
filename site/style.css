@@ -146,10 +146,7 @@ button { font: inherit; color: inherit; }
 
 .time { margin-left: auto; padding-left: 8px; white-space: nowrap; }
 
-.now { display: flex; gap: 1ch; margin: 14px 0 0; padding: 10px 5px; }
-
-/* Same highlight as the playing row in the list, once a track is loaded */
-.now:has(button:enabled) { background: var(--accent); color: var(--on-accent); }
+.now { display: flex; gap: 1ch; margin: 14px 0 0; }
 .now span { flex: none; }
 
 .now button {
@@ -236,7 +233,17 @@ button { font: inherit; color: inherit; }
 
 /* Theme toggle */
 
-.theme-toggle { position: fixed; top: 10px; right: 10px; }
+.theme-toggle {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	display: flex;
+	gap: 6px;
+	width: auto;
+	padding: 0 6px;
+	border-radius: 0;
+	font-size: 75%;
+}
 .theme-toggle .stroke { stroke-width: 1.6; }
 .icon-sun { display: none; }
 

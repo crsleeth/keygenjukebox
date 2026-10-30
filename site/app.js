@@ -365,7 +365,8 @@
 
 	function syncTheme() {
 		const dark = isDark();
-		themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+		// The label names the mode a click switches to, matching the icon.
+		$('theme-label').textContent = dark ? 'Light mode' : 'Dark mode';
 		for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
 			meta.content = dark ? '#121212' : '#ffffff';
 		}
