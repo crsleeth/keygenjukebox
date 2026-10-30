@@ -1,6 +1,6 @@
 # keygenjukebox.net
 
-Status: Static site served by Caddy, autoplays on load; tested locally, container not yet run | Next: Run the container and confirm it serves the music
+Status: Static site served by Caddy with autoplay and a light/dark toggle; tested locally, container not yet run | Next: Run the container and confirm it serves the music
 
 A keygen music jukebox: a visualizer, a few controls, and a scrollable track list. Plain HTML, CSS and JavaScript in `site/`, served by a single Caddy container.
 
