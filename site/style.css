@@ -255,6 +255,16 @@ button { font: inherit; color: inherit; }
 :root[data-theme="dark"] .icon-sun { display: inline; }
 :root[data-theme="dark"] .icon-moon { display: none; }
 
+/* Narrow screens: no room in the corner, so give the toggle its own row above the title */
+@media (max-width: 640px) {
+	.theme-toggle {
+		position: static;
+		align-self: flex-end;
+		height: 28px;
+		margin: -8px -6px 4px 0;
+	}
+}
+
 /* Not enough side margin for the corner notice: show it as a card instead */
 @media (max-width: 960px) {
 	.about {
