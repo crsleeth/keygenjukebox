@@ -178,12 +178,16 @@ button { font: inherit; color: inherit; }
 	background: var(--bg);
 	color: inherit;
 	font: inherit; /* 16px keeps iOS from zooming in on focus */
+	/* Drop Safari's own rounded search-field look and magnifier */
+	-webkit-appearance: none;
+	appearance: none;
 }
 
 .search input:focus { border-color: var(--fg); outline: none; }
 .search input::placeholder { color: inherit; opacity: 0.5; }
 /* Hide the browser's own clear (x) so there's only one clear control */
-.search input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.search input::-webkit-search-cancel-button,
+.search input::-webkit-search-decoration { -webkit-appearance: none; display: none; }
 
 .clear {
 	padding: 0 4px;
