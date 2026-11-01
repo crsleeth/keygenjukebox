@@ -1,6 +1,6 @@
 # keygenjukebox.net
 
-Status: Static site served by Caddy with autoplay and a light/dark toggle (own row on phones); tested locally, container not yet run | Next: Run the container and confirm it serves the music
+Status: Caddy site with optional Cloudflare Tunnel; settings in .env so updates are just git pull; container not yet run from this repo | Next: Switch the server to this compose and .env
 
 A keygen music jukebox: a visualizer, a few controls, and a scrollable track list. Plain HTML, CSS and JavaScript in `site/`, served by a single Caddy container.
 
@@ -12,17 +12,44 @@ Put the music in `mp3s/`, then:
 docker compose up -d
 ```
 
-With Podman, use `podman compose up -d`. Podman has no always-running daemon, so to bring the container back after a reboot also run `systemctl enable --now podman-restart` (add `--user` for rootless). Rootless Podman can't use ports below 1024 by default; set `HTTP_PORT`/`HTTPS_PORT` to e.g. `8080`/`8443`.
+Then open http://localhost:8090. With Podman, use `podman compose up -d`. Podman has no always-running daemon, so to bring the containers back after a reboot also run `systemctl enable --now podman-restart` (add `--user` for rootless).
 
-The track list is read from the music folder on each page load, so adding or removing files needs no restart.
+## Updating
+
+```bash
+git pull
+```
+
+The site and music are read straight from this folder, so changes show up on the next page load. If `compose.yaml` or `Caddyfile` changed, also run `docker compose up -d` (or `docker compose restart web`). Settings live in `.env`, which git never touches.
+
+## Cloudflare Tunnel (optional)
+
+Serves the site over HTTPS without opening any ports.
+
+1. In the Cloudflare Zero Trust dashboard, create a tunnel (choose Docker) and copy its token.
+2. Add a public hostname to the tunnel with the service set to `http://web:80`.
+3. Create `.env` next to `compose.yaml` (or copy `.env.example`):
+
+   ```
+   COMPOSE_PROFILES=tunnel
+   TUNNEL_TOKEN=your-token-here
+   BIND_ADDRESS=127.0.0.1
+   ```
+
+   `BIND_ADDRESS=127.0.0.1` keeps the site's port reachable only from the server itself, so the tunnel is the only way in. Restrict the file with `chmod 600 .env`, since it holds the token.
+4. Start the stack. The tunnel's logs should show `Registered tunnel connection`.
 
 ## Settings
 
-Optional, in a `.env` file next to `compose.yaml` (see `.env.example`):
+Optional, in `.env` (see `.env.example`):
 
-- `SITE_ADDRESS`: `:80` (default) serves plain HTTP behind a proxy; a domain name makes Caddy handle HTTPS itself.
-- `HTTP_PORT`, `HTTPS_PORT`: host ports, default `80` and `443`.
-- `MUSIC_DIR`: music folder, default `./mp3s`.
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `8090` | Host port the site is published on |
+| `BIND_ADDRESS` | `0.0.0.0` | Host address for that port; `127.0.0.1` keeps it local |
+| `MUSIC_DIR` | `./mp3s` | Music folder |
+| `COMPOSE_PROFILES` | (none) | Set to `tunnel` to start the Cloudflare Tunnel |
+| `TUNNEL_TOKEN` | (none) | The tunnel's token |
 
 ## Tools
 

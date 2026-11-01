@@ -1,5 +1,7 @@
-# The music archive is ~3 GB and lives outside git
-mp3s/
+# The music archive is ~3 GB and lives outside git. The folder itself is kept
+# (Podman won't start if a mounted folder is missing).
+mp3s/*
+!mp3s/.gitkeep
 
 .env
 .claude/

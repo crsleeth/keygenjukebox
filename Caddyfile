@@ -1,7 +1,6 @@
-# SITE_ADDRESS comes from .env (see .env.example). The default, ":80", serves
-# plain HTTP for use behind Cloudflare or another proxy. Set it to a domain
-# name and Caddy will fetch and renew an HTTPS certificate for it by itself.
-{$SITE_ADDRESS::80} {
+# Plain HTTP on port 80 inside the container. HTTPS comes from the Cloudflare
+# Tunnel or whatever reverse proxy sits in front.
+:80 {
 	encode zstd gzip
 
 	header {
