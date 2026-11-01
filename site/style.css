@@ -163,12 +163,45 @@ button { font: inherit; color: inherit; }
 
 .now button:disabled { cursor: default; }
 
+/* Search */
+
+.search { display: flex; gap: 8px; margin: 24px 0 0; }
+
+.search input {
+	flex: 1;
+	min-width: 0;
+	box-sizing: border-box;
+	height: 34px;
+	padding: 0 8px;
+	border: 1px solid var(--line);
+	border-radius: 0;
+	background: var(--bg);
+	color: inherit;
+	font: inherit; /* 16px keeps iOS from zooming in on focus */
+}
+
+.search input:focus { border-color: var(--fg); outline: none; }
+.search input::placeholder { color: inherit; opacity: 0.5; }
+/* Hide the browser's own clear (x) so there's only one clear control */
+.search input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+
+.clear {
+	padding: 0 4px;
+	border: 0;
+	background: none;
+	color: var(--link);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.clear:disabled { color: inherit; opacity: 0.35; text-decoration: none; cursor: default; }
+
 /* Track list */
 
 .tracks {
 	flex: 1 1 0;
 	min-height: 0;
-	margin: 24px 0 0;
+	margin: 12px 0 0;
 	padding: 0;
 	overflow-y: auto;
 	list-style: none;

@@ -91,6 +91,11 @@
 			<button type="button" id="now-playing" title="Show in list" disabled>&mdash;</button>
 		</p>
 
+		<div class="search" role="search">
+			<input type="search" id="search" placeholder="Search" aria-label="Search songs" aria-controls="tracks" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+			<button type="button" id="clear" class="clear" disabled>Clear</button>
+		</div>
+
 		<ul id="tracks" class="tracks">
 			<li class="note">Loading&hellip;</li>
 		</ul>

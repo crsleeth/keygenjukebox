@@ -18,6 +18,8 @@
 	const timeTotal = $('time-total');
 	const nowPlaying = $('now-playing');
 	const list = $('tracks');
+	const searchInput = $('search');
+	const clearBtn = $('clear');
 	const about = $('about');
 
 	const store = {
@@ -38,6 +40,8 @@
 	audio.preload = 'metadata';
 
 	let tracks = [];
+	// Indexes of the tracks matching the search, or null when not searching.
+	let matches = null;
 	let current = -1;
 	const history = [];
 	let failures = 0;
@@ -78,7 +82,39 @@
 			li.append(a);
 			frag.append(li);
 		});
+		// Kept after the tracks so list.children[i] is still track i.
+		const none = document.createElement('li');
+		none.className = 'note';
+		none.textContent = 'No matching songs.';
+		none.hidden = true;
+		frag.append(none);
 		list.replaceChildren(frag);
+	}
+
+	// ---- Search ----
+
+	// Underscores read as spaces, case is ignored, and every word typed has to
+	// appear somewhere in the name: "nero burning" finds "AAOCG_-_Nero_Burning_Rom".
+	const searchable = (s) => s.toLowerCase().replace(/_/g, ' ');
+
+	function filterTracks() {
+		const words = searchable(searchInput.value).split(/\s+/).filter(Boolean);
+		clearBtn.disabled = !searchInput.value;
+		matches = words.length ? [] : null;
+		tracks.forEach((name, i) => {
+			const text = searchable(name);
+			const show = words.every((w) => text.includes(w));
+			list.children[i].hidden = !show;
+			if (show && matches) matches.push(i);
+		});
+		list.lastElementChild.hidden = !matches || matches.length > 0;
+		list.scrollTop = 0;
+	}
+
+	function clearSearch() {
+		searchInput.value = '';
+		filterTracks();
+		list.children[current]?.scrollIntoView({ block: 'center' });
 	}
 
 	// "GROUP_-_Some_Release.mp3" -> { artist: "GROUP", title: "Some Release" }
@@ -149,11 +185,15 @@
 		else audio.pause();
 	}
 
+	// While searching, next and shuffle stay within the matching songs.
 	function next() {
-		if (!tracks.length) return;
-		let i = (current + 1) % tracks.length;
-		if (shuffle && tracks.length > 1) {
-			do i = Math.floor(Math.random() * tracks.length); while (i === current);
+		const pool = matches?.length ? matches : tracks.map((_, i) => i);
+		if (!pool.length) return;
+		let i;
+		if (shuffle && pool.length > 1) {
+			do i = pool[Math.floor(Math.random() * pool.length)]; while (i === current);
+		} else {
+			i = pool.find((j) => j > current) ?? pool[0];
 		}
 		play(i);
 	}
@@ -161,7 +201,8 @@
 	function prev() {
 		if (!tracks.length) return;
 		if (current < 0) return next();
-		const i = history.length ? history.pop() : (current - 1 + tracks.length) % tracks.length;
+		const pool = matches?.length ? matches : tracks.map((_, i) => i);
+		const i = history.length ? history.pop() : (pool.findLast((j) => j < current) ?? pool.at(-1));
 		play(i, false);
 	}
 
@@ -335,7 +376,23 @@
 		play(Number(link.dataset.index));
 	});
 
+	searchInput.addEventListener('input', filterTracks);
+	searchInput.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && searchInput.value) {
+			e.preventDefault();
+			clearSearch();
+		} else if (e.key === 'Enter') {
+			searchInput.blur(); // closes the keyboard on phones
+		}
+	});
+	clearBtn.addEventListener('click', () => {
+		clearSearch();
+		searchInput.focus();
+	});
+
 	nowPlaying.addEventListener('click', () => {
+		// The playing song may be hidden by the search; show the full list again.
+		if (list.children[current]?.hidden) clearSearch();
 		list.children[current]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
 	});
 
@@ -403,6 +460,9 @@
 		(names) => {
 			tracks = names;
 			renderTracks();
+			searchInput.placeholder = `Search ${names.length.toLocaleString()} songs`;
+			// Browsers can restore typed text when going back to the page.
+			if (searchInput.value) filterTracks();
 			next(); // autoplay
 			// If sound started but the visualizer's audio context was held back,
 			// the first interaction releases it.

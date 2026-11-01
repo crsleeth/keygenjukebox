@@ -1,6 +1,6 @@
 # keygenjukebox.net
 
-Status: Caddy site with optional Cloudflare Tunnel; settings in .env so updates are just git pull; container not yet run from this repo | Next: Switch the server to this compose and .env
+Status: Caddy site with song search and optional Cloudflare Tunnel; settings in .env so updates are just git pull; container not yet run from this repo | Next: Switch the server to this compose and .env
 
 A keygen music jukebox: a visualizer, a few controls, and a scrollable track list. Plain HTML, CSS and JavaScript in `site/`, served by a single Caddy container.
 
