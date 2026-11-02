@@ -1,5 +1,7 @@
 # keygenjukebox.net
 
+Live at [keygenjukebox.net](https://keygenjukebox.net).
+
 A keygen music jukebox: a visualizer, a few controls, and a scrollable track list. Plain HTML, CSS and JavaScript in `site/`, served by a single Caddy container.
 
 ## Run
