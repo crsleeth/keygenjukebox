@@ -10,7 +10,7 @@ Put the music in `mp3s/`, then:
 docker compose up -d
 ```
 
-Then open http://localhost:8090. With Podman, use `podman compose up -d`. Podman has no always-running daemon, so to bring the containers back after a reboot also run `systemctl enable --now podman-restart` (add `--user` for rootless).
+Then open http://localhost:8080. With Podman, use `podman compose up -d`. Podman has no always-running daemon, so to bring the containers back after a reboot also run `systemctl enable --now podman-restart` (add `--user` for rootless).
 
 ## Updating
 
@@ -43,7 +43,7 @@ Optional, in `.env` (see `.env.example`):
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `PORT` | `8090` | Host port the site is published on |
+| `PORT` | `8080` | Host port the site is published on |
 | `BIND_ADDRESS` | `0.0.0.0` | Host address for that port; `127.0.0.1` keeps it local |
 | `MUSIC_DIR` | `./mp3s` | Music folder |
 | `COMPOSE_PROFILES` | (none) | Set to `tunnel` to start the Cloudflare Tunnel |
